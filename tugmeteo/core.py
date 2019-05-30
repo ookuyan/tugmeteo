@@ -23,6 +23,8 @@ def parse_meteo_page(html, telescope):
         'width': '100%', 'align': 'left'})[0]
 
     if telescope == 'RTT150':
+        last_meteo['telescope'] = 'RTT150'
+
         keywords = list()
 
         for x in table.findAll('strong'):
@@ -38,6 +40,8 @@ def parse_meteo_page(html, telescope):
 
         return last_meteo
     elif telescope == 'T100':
+        last_meteo['telescope'] = 'T100'
+
         for x in table.findAll('strong'):
             x = x.text.split('=')
 
@@ -56,6 +60,8 @@ def parse_meteo_page(html, telescope):
 
         return last_meteo
     else:
+        last_meteo['telescope'] = 'T60'
+
         for x in table.findAll('strong'):
             x = x.text.split('=')
 
