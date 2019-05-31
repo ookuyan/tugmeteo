@@ -53,6 +53,7 @@ print(t)
 
 ```python
 table = met.get_meteo_archives(start_date='2019-02-10', end_date='2019-05-31')
+print(table)
 ```
 
 ```
