@@ -3,82 +3,9 @@
 __all__ = ['TugMeteo']
 
 import requests
-from datetime import datetime
-from bs4 import BeautifulSoup
 
-
-def get_current_time_stamp():
-    t = datetime.now()
-    return t.strftime('%Y-%m-%dT%H:%M%:%S')
-
-
-def parse_meteo_page(html, telescope):
-    last_meteo = dict()
-
-    last_meteo['timestamp'] = get_current_time_stamp()
-
-    soup = BeautifulSoup(html, 'html.parser')
-    table = soup.findAll('table', {
-        'cellspacing': '1', 'cellpadding': '0',
-        'width': '100%', 'align': 'left'})[0]
-
-    if telescope == 'RTT150':
-        last_meteo['telescope'] = 'RTT150'
-
-        keywords = list()
-
-        for x in table.findAll('strong'):
-            keywords.append(x.text.strip().replace(':', ''))
-
-        for i, val in enumerate(table.findAll('b')):
-            val = val.text.replace('\n', '').replace('\xa0', '').split(' ')
-
-            if i != 7:
-                last_meteo[keywords[i]] = float(val[0])
-            else:
-                last_meteo[keywords[i]] = float(val[-2])
-
-        return last_meteo
-    elif telescope == 'T100':
-        last_meteo['telescope'] = 'T100'
-
-        for x in table.findAll('strong'):
-            x = x.text.split('=')
-
-            keyword = x[0].strip()
-            value = x[-1].strip()
-
-            last_meteo[keyword] = float(value)
-
-        for x in soup.findAll('b')[12:29][0::2]:
-            x = x.text.split('=')
-
-            keyword = x[0].strip()
-            value = x[-1].strip()
-
-            last_meteo[keyword] = float(value)
-
-        return last_meteo
-    else:
-        last_meteo['telescope'] = 'T60'
-
-        for x in table.findAll('strong'):
-            x = x.text.split('=')
-
-            keyword = x[0].strip()
-            value = x[-1].strip()
-
-            last_meteo[keyword] = float(value)
-
-        for x in soup.findAll('b')[13:30][0::2]:
-            x = x.text.split('=')
-
-            keyword = x[0].strip()
-            value = x[-1].strip()
-
-            last_meteo[keyword] = float(value)
-
-        return last_meteo
+from .helper import get_current_time_stamp, parse_meteo_page,\
+    generate_meteo_archive_urls, parse_meteo_archive, concat_meteo_archive
 
 
 class TugMeteo(object):
@@ -96,6 +23,8 @@ class TugMeteo(object):
             'T60': 'http://t60meteo.tug.tubitak.gov.tr/index.html/'}
 
         self._last_meteos = {'RTT150': None, 'T100': None, 'T60': None}
+
+        self._meteo_archives = {'RTT150': None, 'T100': None, 'T60': None}
 
     def _get_meteo_page(self, telescope):
         if telescope in self._telescopes:
@@ -123,24 +52,6 @@ class TugMeteo(object):
 
         return False
 
-    def get_last_meteo(self, telescope='all'):
-        if telescope == 'all':
-            self._telescope = telescope
-
-            for telescope in self._telescopes:
-                self._update(telescope)
-
-            return self._last_meteos
-
-        if telescope in self._telescopes:
-            self._telescope = telescope
-
-            self._update(telescope)
-
-            return self._last_meteos[telescope]
-
-        return None
-
     def _get_meteo_info(self, telescope, info_keywords, key):
         info = dict()
         info['timestamp'] = get_current_time_stamp()
@@ -164,6 +75,108 @@ class TugMeteo(object):
             return info
         else:
             return None
+
+    def get_meteo_archives(self, telescope='RTT150', start_date='', end_date='',
+                           date_format='%Y-%m-%d'):
+        """
+        Gets meteorology archive from database with 5 min interval.
+
+        Parameters
+        ----------
+
+        telescope : str
+            The name of the meteorological station (telescope names).
+            Default value is 'RTT150'.
+
+        start_date : str
+            Start date of the archive.
+            It must be in the format specified by 'date_format'.
+            If None, return today's archive url.
+
+        end_date : str
+            End date of the archive.
+            It must be in the format specified by 'date_format'.
+            If None, return today's archive url.
+
+        date_format : str
+            Date format for 'start_date' and 'end_date' parameters.
+
+        Returns
+        -------
+        'pandas.DataFrame'
+            Returned archive.
+
+        Examples
+        --------
+
+        >>> from tugmeteo import TugMeteo
+        >>>
+        >>> met = TugMeteo()
+        >>>
+        >>> # Returns data from the archive for 7 days.
+        >>> t = met.get_meteo_archives(telescope='T100',
+                                       start_date='2017-05-31',
+                                       end_date='2019-06-07')
+        >>>
+        >>> # Get today's archive.
+        >>> t = met.get_meteo_archives(telescope='RTT150')
+        """
+
+        if not isinstance(telescope, str):
+            raise TypeError("'telescope' should be a 'str' object.")
+
+        if telescope not in self._telescopes:
+            raise ValueError(
+                "'telescope' must be one of 'RTT150', 'T100' or 'T60'.")
+
+        if not isinstance(start_date, str):
+            raise TypeError("'start_date' should be a 'str' object.")
+
+        if not isinstance(end_date, str):
+            raise TypeError("'end_date' should be a 'str' object.")
+
+        urls = generate_meteo_archive_urls(telescope, start_date,
+                                           end_date, date_format)
+
+        if urls is None:
+            return None
+
+        raw_archives = list()
+        for url in urls:
+            r = requests.get(url)
+            if not r.ok:
+                continue
+
+            raw_archives.append(r.text)
+
+        tables = list()
+        for raw_archive in raw_archives:
+            table = parse_meteo_archive(raw_archive)
+            tables.append(table)
+
+        t = concat_meteo_archive(tables)
+
+        self._meteo_archives[telescope] = t
+
+        return t
+
+    def get_last_meteo(self, telescope='all'):
+        if telescope == 'all':
+            self._telescope = telescope
+
+            for telescope in self._telescopes:
+                self._update(telescope)
+
+            return self._last_meteos
+
+        if telescope in self._telescopes:
+            self._telescope = telescope
+
+            self._update(telescope)
+
+            return self._last_meteos[telescope]
+
+        return None
 
     def get_temperature(self, telescope='all'):
         info_keywords = {
