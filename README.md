@@ -8,8 +8,8 @@ from tugmeteo import TugMeteo
 
 met = TugMeteo()
 
-raw_meteos = met.get_last_meteo('RTT150')
-print(raw_meteos)
+data = met.get_last_meteo('RTT150')
+print(data)
 ```
 
 ```json
