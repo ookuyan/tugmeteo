@@ -126,7 +126,7 @@ def generate_meteo_archive_urls(telescope, start_date, end_date, date_format):
 
 
 def parse_meteo_archive(raw_archive):
-    t = pd.read_table(StringIO(raw_archive))
+    t = pd.read_csv(StringIO(raw_archive), sep='\t')
 
     t.rename(columns={'--Timestamp---': 'Timestamp'}, inplace=True)
     t['Timestamp'] = pd.to_datetime(t['Timestamp'], format='%Y%m%d %H:%M',
