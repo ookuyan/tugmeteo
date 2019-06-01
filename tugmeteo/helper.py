@@ -138,6 +138,9 @@ def parse_meteo_archive(raw_archive):
     mask = t['Timestamp'].notna()
     t = t[mask]
 
+    for key in t.columns[1:].values:
+        t[key] = pd.to_numeric(t[key])
+
     return t
 
 
