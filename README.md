@@ -1,5 +1,5 @@
 # tugmeteo
-TÜBİTAK National Observatory Meteorology Library
+TÜBİTAK National Observatory (TUG) Meteorology Library
 
 ## Examples
 
