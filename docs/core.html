@@ -1,0 +1,3448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.2" />
+<title>tugmeteo.core API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tugmeteo.core</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">#!/usr/bin/env python
+
+__all__ = [&#39;TugMeteo&#39;]
+
+import requests
+
+from .helper import get_current_time_stamp, parse_meteo_page,\
+    generate_meteo_archive_urls, parse_meteo_archive, concat_meteo_archive
+
+
+class TugMeteo(object):
+
+    def __init__(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        TugMeteo
+
+        TÜBİTAK National Observatory Meteorology Library
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Methods
+        -------
+        get_meteo_archives(telescope=&#39;RTT150&#39;, start_date=&#39;&#39;, end_date=&#39;&#39;,
+                           date_format=&#39;%Y-%m-%d&#39;)
+            Gets meteorology archive from database with 5 min interval.
+
+        get_last_meteo(telescope=&#39;all&#39;)
+            Return current all meteorological data.
+
+        get_temperature(telescope=&#39;all&#39;)
+            Returns current temperature.
+            Unit is Celsius [C].
+
+        get_dome_temperature(telescope=&#39;all&#39;)
+            Returns current dome temperature.
+            Unit is Celsius [C].
+
+        get_humidity(telescope=&#39;all&#39;)
+            Returns current humidity.
+            Unit is RH [%].
+
+        get_dome_humidity(telescope=&#39;all&#39;)
+            Returns current dome humidity.
+            Unit is RH [%].
+
+        get_pressure(telescope=&#39;all&#39;)
+            Returns current pressure.
+            Unit is millibar [mb].
+
+        get_wind_speed(telescope=&#39;all&#39;)
+            Returns current wind speed.
+            Unit is km/h.
+
+        get_wind_chill(telescope=&#39;all&#39;)
+            Returns current wind chill.
+            Unit is Celsius [C].
+
+        get_wind_direction(telescope=&#39;all&#39;)
+            Returns current wind direction (azimuth -&gt; from North).
+            Unit is Degree.
+
+        get_dew_point(telescope=&#39;all&#39;)
+            Returns current dew point.
+            Unit is Celsius [C].
+
+        get_cumulus_base(telescope=&#39;all&#39;)
+            Returns current cumulus cloud base.
+            Unit is meter [m].
+
+        get_rain(telescope=&#39;all&#39;)
+            Returns current rain precipitation.
+            Unit is mm/h.
+
+        get_uv_index(telescope=&#39;all&#39;)
+            Returns current uv index.
+            Unit is index.
+
+        get_solar_radiation(telescope=&#39;all&#39;)
+            Returns current solar radiation.
+            Unit is W / m^2.
+
+        get_air_density(telescope=&#39;all&#39;)
+            Returns current air density.
+            Unit is kg / m^3.
+
+        Examples
+        --------
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; data = met.get_last_meteo(&#39;RTT150&#39;)
+        &gt;&gt;&gt; print(data)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:36:06&#39;,
+            &#39;telescope&#39;: &#39;RTT150&#39;,
+            &#39;Temperature&#39;: 13.0,
+            &#39;Dome Temperature&#39;: 15.3,
+            &#39;Coude Temperature&#39;: 13.0,
+            &#39;Humidity&#39;: 51.0,
+            &#39;Dome Humidity&#39;: 48.0,
+            &#39;Coude Humidity&#39;: 57.0,
+            &#39;Barometer&#39;: 757.6,
+            &#39;Wind&#39;: 13.0,
+            &#39;Wind Chill&#39;: 13.0,
+            &#39;Dewpoint&#39;: 3.1,
+            &#39;High Temperature&#39;: 17.2,
+            &#39;Low Temperature&#39;: 11.7,
+            &#39;High Humidity&#39;: 54.0,
+            &#39;Low Humidity&#39;: 32.0,
+            &#39;High Barometer&#39;: 759.7,
+            &#39;Low Barometer&#39;: 757.0,
+            &#39;High Wind&#39;: 37.0,
+            &#39;Est. Cumulus Base&#39;: 1239.0
+        }
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; p = met.get_pressure(&#39;T60&#39;)
+        &gt;&gt;&gt; print(p)
+        {&#39;timestamp&#39;: &#39;2019-05-31T23:37:27&#39;, &#39;info&#39;: &#39;Pressure&#39;, &#39;T60&#39;: 758.1}
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; table = met.get_meteo_archives(start_date=&#39;2019-02-10&#39;,
+                                           end_date=&#39;2019-05-31&#39;)
+        &#34;&#34;&#34;
+
+        super(TugMeteo, self).__init__()
+
+        self._telescope = telescope
+
+        self._telescopes = [&#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39;]
+
+        self._telescopes_meteo_pages = {
+            &#39;RTT150&#39;: &#39;http://rtt150meteo.tug.tubitak.gov.tr&#39;,
+            &#39;T100&#39;: &#39;http://t100meteo.tug.tubitak.gov.tr&#39;,
+            &#39;T60&#39;: &#39;http://t60meteo.tug.tubitak.gov.tr/index.html/&#39;}
+
+        self._last_meteos = {&#39;RTT150&#39;: None, &#39;T100&#39;: None, &#39;T60&#39;: None}
+
+        self._meteo_archives = {&#39;RTT150&#39;: None, &#39;T100&#39;: None, &#39;T60&#39;: None}
+
+    def _get_meteo_page(self, telescope):
+        &#34;&#34;&#34;
+        Internal using only.
+        &#34;&#34;&#34;
+
+        if telescope in self._telescopes:
+            try:
+                respond = requests.get(
+                    self._telescopes_meteo_pages[telescope])
+            except requests.exceptions.RequestException as exp:
+                print(exp)
+                return None
+
+            return respond.text
+
+        return None
+
+    def _update(self, telescope):
+        &#34;&#34;&#34;
+        Internal using only.
+        &#34;&#34;&#34;
+
+        page = self._get_meteo_page(telescope)
+
+        if page is not None:
+            last_meteo = parse_meteo_page(page, telescope)
+            self._last_meteos[telescope] = last_meteo
+
+            return True
+
+        self._last_meteos[telescope] = None
+
+        return False
+
+    def _get_meteo_info(self, telescope, info_keywords, key):
+        &#34;&#34;&#34;
+        Internal using only.
+        &#34;&#34;&#34;
+
+        info = dict()
+        info[&#39;timestamp&#39;] = get_current_time_stamp()
+        info[&#39;info&#39;] = key
+
+        if self.get_last_meteo(telescope) is not None:
+            if telescope == &#39;all&#39;:
+                for tel in self._telescopes:
+                    keyword = info_keywords[tel]
+                    if keyword is not None:
+                        info[tel] = self._last_meteos[tel][keyword]
+                    else:
+                        info[tel] = None
+            else:
+                keyword = info_keywords[telescope]
+                if keyword is not None:
+                    info[telescope] = self._last_meteos[telescope][keyword]
+                else:
+                    info[telescope] = None
+
+            return info
+        else:
+            return None
+
+    def get_meteo_archives(self, telescope=&#39;RTT150&#39;, start_date=&#39;&#39;, end_date=&#39;&#39;,
+                           date_format=&#39;%Y-%m-%d&#39;):
+        &#34;&#34;&#34;
+        Gets meteorology archive from database with 5 min interval.
+
+        Parameters
+        ----------
+
+        telescope : str
+            The name of the meteorological station (telescope names).
+            Default value is &#39;RTT150&#39;.
+
+        start_date : str
+            Start date of the archive.
+            It must be in the format specified by &#39;date_format&#39;.
+            If None, return today&#39;s archive url.
+
+        end_date : str
+            End date of the archive.
+            It must be in the format specified by &#39;date_format&#39;.
+            If None, return today&#39;s archive url.
+
+        date_format : str
+            Date format for &#39;start_date&#39; and &#39;end_date&#39; parameters.
+
+        Returns
+        -------
+        &#39;pandas.DataFrame&#39;
+            Returned archive.
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; # Returns data from the archive for 7 days.
+        &gt;&gt;&gt; t = met.get_meteo_archives(telescope=&#39;T100&#39;,
+                                       start_date=&#39;2017-05-31&#39;,
+                                       end_date=&#39;2019-06-07&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; # Get today&#39;s archive (Default telescope is &#39;RTT150&#39;).
+        &gt;&gt;&gt; t = met.get_meteo_archives()
+        &#34;&#34;&#34;
+
+        if not isinstance(telescope, str):
+            raise TypeError(&#34;&#39;telescope&#39; should be a &#39;str&#39; object.&#34;)
+
+        if telescope not in self._telescopes:
+            raise ValueError(
+                &#34;&#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39; or &#39;T60&#39;.&#34;)
+
+        if not isinstance(start_date, str):
+            raise TypeError(&#34;&#39;start_date&#39; should be a &#39;str&#39; object.&#34;)
+
+        if not isinstance(end_date, str):
+            raise TypeError(&#34;&#39;end_date&#39; should be a &#39;str&#39; object.&#34;)
+
+        urls = generate_meteo_archive_urls(telescope, start_date,
+                                           end_date, date_format)
+
+        if urls is None:
+            return None
+
+        raw_archives = list()
+        for url in urls:
+            r = requests.get(url)
+            if not r.ok:
+                continue
+
+            raw_archives.append(r.text)
+
+        tables = list()
+        for raw_archive in raw_archives:
+            table = parse_meteo_archive(raw_archive)
+            tables.append(table)
+
+        t = concat_meteo_archive(tables)
+
+        self._meteo_archives[telescope] = t
+
+        return t
+
+    def get_last_meteo(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Return current all meteorological data.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        Type of &#39;dict&#39;
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; data = met.get_last_meteo(&#39;RTT150&#39;)
+        &gt;&gt;&gt; print(data)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:55:33&#39;,
+            &#39;telescope&#39;: &#39;RTT150&#39;,
+            &#39;Temperature&#39;: 13.8,
+            &#39;Dome Temperature&#39;: 14.7,
+            &#39;Coude Temperature&#39;: 13.0,
+            &#39;Humidity&#39;: 43.0,
+            &#39;Dome Humidity&#39;: 42.0,
+            &#39;Coude Humidity&#39;: 57.0,
+            &#39;Barometer&#39;: 757.7,
+            &#39;Wind&#39;: 10.0,
+            &#39;Wind Chill&#39;: 13.8,
+            &#39;Dewpoint&#39;: 1.5,
+            &#39;High Temperature&#39;: 17.2,
+            &#39;Low Temperature&#39;: 11.7,
+            &#39;High Humidity&#39;: 54.0,
+            &#39;Low Humidity&#39;: 32.0,
+            &#39;High Barometer&#39;: 759.7,
+            &#39;Low Barometer&#39;: 757.0,
+            &#39;High Wind&#39;: 37.0,
+            &#39;Est. Cumulus Base&#39;: 1547.0
+        }
+        &#34;&#34;&#34;
+
+        if telescope == &#39;all&#39;:
+            self._telescope = telescope
+
+            for telescope in self._telescopes:
+                self._update(telescope)
+
+            return self._last_meteos
+
+        if telescope in self._telescopes:
+            self._telescope = telescope
+
+            self._update(telescope)
+
+            return self._last_meteos[telescope]
+
+        return None
+
+    def get_temperature(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current temperature.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Temperature value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_temperature(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:54:30&#39;,
+            &#39;info&#39;: &#39;Temperature&#39;,
+            &#39;RTT150&#39;: 13.9,
+            &#39;T100&#39;: 13.5,
+            &#39;T60&#39;: 13.8
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Temperature&#39;,
+            &#39;T100&#39;: &#39;TEMPERATURE&#39;,
+            &#39;T60&#39;: &#39;TEMPERATURE&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Temperature&#39;)
+
+    def get_dome_temperature(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current dome temperature.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Dome temperature value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_dome_temperature(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:57:15&#39;,
+            &#39;info&#39;: &#39;Dome Temperature&#39;,
+            &#39;RTT150&#39;: 14.7,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: 17.2
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Dome Temperature&#39;,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: &#39;Inside Temperature&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords,
+                                    &#39;Dome Temperature&#39;)
+
+    def get_humidity(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current humidity.
+        Unit is RH [%].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Humidity value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_humidity(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:58:18&#39;,
+            &#39;info&#39;: &#39;Humidity&#39;,
+            &#39;RTT150&#39;: 44.0,
+            &#39;T100&#39;: 43.0,
+            &#39;T60&#39;: 42.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Humidity&#39;,
+            &#39;T100&#39;: &#39;HUMIDITY&#39;,
+            &#39;T60&#39;: &#39;HUMIDITY&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Humidity&#39;)
+
+    def get_dome_humidity(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current dome humidity.
+        Unit is RH [%].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Dome humidity value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_dome_humidity(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:01:30&#39;,
+            &#39;info&#39;: &#39;Dome Humidity&#39;,
+            &#39;RTT150&#39;: 43.0,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: 36.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Dome Humidity&#39;,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: &#39;Inside Humidity&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Dome Humidity&#39;)
+
+    def get_pressure(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current pressure.
+        Unit is millibar [mb].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Pressure value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_pressure(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:04:42&#39;,
+            &#39;info&#39;: &#39;Pressure&#39;,
+            &#39;RTT150&#39;: 757.7,
+            &#39;T100&#39;: 755.8,
+            &#39;T60&#39;: 757.9
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Barometer&#39;,
+            &#39;T100&#39;: &#39;PRESSURE&#39;,
+            &#39;T60&#39;: &#39;PRESSURE&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Pressure&#39;)
+
+    def get_wind_speed(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current wind speed.
+        Unit is km/h.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Wind speed value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_wind_speed(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:07:08&#39;,
+            &#39;info&#39;: &#39;Wind Speed&#39;,
+            &#39;RTT150&#39;: 6.0,
+            &#39;T100&#39;: 24.1,
+            &#39;T60&#39;: 11.3
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Wind&#39;,
+            &#39;T100&#39;: &#39;WINDSPEED&#39;,
+            &#39;T60&#39;: &#39;WINDSPEED&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Wind Speed&#39;)
+
+    def get_wind_chill(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current wind chill.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Wind chill value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_wind_chill(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:09:06&#39;,
+            &#39;info&#39;: &#39;Wind Chill&#39;,
+            &#39;RTT150&#39;: 13.4,
+            &#39;T100&#39;: 13.1,
+            &#39;T60&#39;: 13.5
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Wind Chill&#39;,
+            &#39;T100&#39;: &#39;Wind Chill&#39;,
+            &#39;T60&#39;: &#39;Wind Chill&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Wind Chill&#39;)
+
+    def get_wind_direction(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current wind direction (azimuth -&gt; from North).
+        Unit is Degree.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Wind chill value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_wind_direction(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:10:31&#39;,
+            &#39;info&#39;: &#39;Wind Direction&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 59.0,
+            &#39;T60&#39;: 238.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;WINDDIR&#39;,
+            &#39;T60&#39;: &#39;WINDDIR&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Wind Direction&#39;)
+
+    def get_dew_point(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current dew point.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Dew point value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_dew_point(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:12:02&#39;,
+            &#39;info&#39;: &#39;Dew Point&#39;,
+            &#39;RTT150&#39;: 2.0,
+            &#39;T100&#39;: 1.7,
+            &#39;T60&#39;: 1.7
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Dewpoint&#39;,
+            &#39;T100&#39;: &#39;Dew Point&#39;,
+            &#39;T60&#39;: &#39;Dew Point&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Dew Point&#39;)
+
+    def get_cumulus_base(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current cumulus cloud base.
+        Unit is meter [m].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Cumulus base value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_cumulus_base(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:13:19&#39;,
+            &#39;info&#39;: &#39;Est. Cumulus Base&#39;,
+            &#39;RTT150&#39;: 1387.0,
+            &#39;T100&#39;: 1383.0,
+            &#39;T60&#39;: 1463.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Est. Cumulus Base&#39;,
+            &#39;T100&#39;: &#39;Est. Cumulus Base&#39;,
+            &#39;T60&#39;: &#39;Est. Cumulus Base&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords,
+                                    &#39;Est. Cumulus Base&#39;)
+
+    def get_rain(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current rain precipitation.
+        Unit is mm/h.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Rain precipitation value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_rain(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:15:08&#39;,
+            &#39;info&#39;: &#39;Rain&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.0,
+            &#39;T60&#39;: 0.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;RAIN&#39;,
+            &#39;T60&#39;: &#39;RAIN&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Rain&#39;)
+
+    def get_uv_index(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current uv index.
+        Unit is index.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            UV index value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_uv_index(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:16:08&#39;,
+            &#39;info&#39;: &#39;UV Index&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.0,
+            &#39;T60&#39;: 0.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;UV&#39;,
+            &#39;T60&#39;: &#39;UV&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;UV Index&#39;)
+
+    def get_solar_radiation(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current solar radiation.
+        Unit is W / m^2.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Solar radiation value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_solar_radiation(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:17:40&#39;,
+            &#39;info&#39;: &#39;Solar Radiation&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.0,
+            &#39;T60&#39;: 0.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;Solar Radiation&#39;,
+            &#39;T60&#39;: &#39;Solar Radiation&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords,
+                                    &#39;Solar Radiation&#39;)
+
+    def get_air_density(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current air density.
+        Unit is kg / m^3.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Air density value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_air_density(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:18:41&#39;,
+            &#39;info&#39;: &#39;Air Density&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.917,
+            &#39;T60&#39;: 0.918
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;Air Density&#39;,
+            &#39;T60&#39;: &#39;Air Density&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Air Density&#39;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tugmeteo.core.TugMeteo"><code class="flex name class">
+<span>class <span class="ident">TugMeteo</span></span>
+<span>(</span><span>telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>TugMeteo</p>
+<p>TÜBİTAK National Observatory Meteorology Library</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="methods">Methods</h2>
+<p>get_meteo_archives(telescope='RTT150', start_date='', end_date='',
+date_format='%Y-%m-%d')
+Gets meteorology archive from database with 5 min interval.</p>
+<p>get_last_meteo(telescope='all')
+Return current all meteorological data.</p>
+<p>get_temperature(telescope='all')
+Returns current temperature.
+Unit is Celsius [C].</p>
+<p>get_dome_temperature(telescope='all')
+Returns current dome temperature.
+Unit is Celsius [C].</p>
+<p>get_humidity(telescope='all')
+Returns current humidity.
+Unit is RH [%].</p>
+<p>get_dome_humidity(telescope='all')
+Returns current dome humidity.
+Unit is RH [%].</p>
+<p>get_pressure(telescope='all')
+Returns current pressure.
+Unit is millibar [mb].</p>
+<p>get_wind_speed(telescope='all')
+Returns current wind speed.
+Unit is km/h.</p>
+<p>get_wind_chill(telescope='all')
+Returns current wind chill.
+Unit is Celsius [C].</p>
+<p>get_wind_direction(telescope='all')
+Returns current wind direction (azimuth -&gt; from North).
+Unit is Degree.</p>
+<p>get_dew_point(telescope='all')
+Returns current dew point.
+Unit is Celsius [C].</p>
+<p>get_cumulus_base(telescope='all')
+Returns current cumulus cloud base.
+Unit is meter [m].</p>
+<p>get_rain(telescope='all')
+Returns current rain precipitation.
+Unit is mm/h.</p>
+<p>get_uv_index(telescope='all')
+Returns current uv index.
+Unit is index.</p>
+<p>get_solar_radiation(telescope='all')
+Returns current solar radiation.
+Unit is W / m^2.</p>
+<p>get_air_density(telescope='all')
+Returns current air density.
+Unit is kg / m^3.</p>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; data = met.get_last_meteo('RTT150')
+&gt;&gt;&gt; print(data)
+{
+
+
+'timestamp': '2019-05-31T23:36:06',
+'telescope': 'RTT150',
+'Temperature': 13.0,
+'Dome Temperature': 15.3,
+'Coude Temperature': 13.0,
+'Humidity': 51.0,
+'Dome Humidity': 48.0,
+'Coude Humidity': 57.0,
+'Barometer': 757.6,
+'Wind': 13.0,
+'Wind Chill': 13.0,
+'Dewpoint': 3.1,
+'High Temperature': 17.2,
+'Low Temperature': 11.7,
+'High Humidity': 54.0,
+'Low Humidity': 32.0,
+'High Barometer': 759.7,
+'Low Barometer': 757.0,
+'High Wind': 37.0,
+'Est. Cumulus Base': 1239.0
+</code></pre>
+<p>}</p>
+<pre><code>&gt;&gt;&gt;
+&gt;&gt;&gt; p = met.get_pressure('T60')
+&gt;&gt;&gt; print(p)
+{'timestamp': '2019-05-31T23:37:27', 'info': 'Pressure', 'T60': 758.1}
+&gt;&gt;&gt;
+&gt;&gt;&gt; table = met.get_meteo_archives(start_date='2019-02-10',
+
+
+                               end_date='2019-05-31')
+</code></pre></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class TugMeteo(object):
+
+    def __init__(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        TugMeteo
+
+        TÜBİTAK National Observatory Meteorology Library
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Methods
+        -------
+        get_meteo_archives(telescope=&#39;RTT150&#39;, start_date=&#39;&#39;, end_date=&#39;&#39;,
+                           date_format=&#39;%Y-%m-%d&#39;)
+            Gets meteorology archive from database with 5 min interval.
+
+        get_last_meteo(telescope=&#39;all&#39;)
+            Return current all meteorological data.
+
+        get_temperature(telescope=&#39;all&#39;)
+            Returns current temperature.
+            Unit is Celsius [C].
+
+        get_dome_temperature(telescope=&#39;all&#39;)
+            Returns current dome temperature.
+            Unit is Celsius [C].
+
+        get_humidity(telescope=&#39;all&#39;)
+            Returns current humidity.
+            Unit is RH [%].
+
+        get_dome_humidity(telescope=&#39;all&#39;)
+            Returns current dome humidity.
+            Unit is RH [%].
+
+        get_pressure(telescope=&#39;all&#39;)
+            Returns current pressure.
+            Unit is millibar [mb].
+
+        get_wind_speed(telescope=&#39;all&#39;)
+            Returns current wind speed.
+            Unit is km/h.
+
+        get_wind_chill(telescope=&#39;all&#39;)
+            Returns current wind chill.
+            Unit is Celsius [C].
+
+        get_wind_direction(telescope=&#39;all&#39;)
+            Returns current wind direction (azimuth -&gt; from North).
+            Unit is Degree.
+
+        get_dew_point(telescope=&#39;all&#39;)
+            Returns current dew point.
+            Unit is Celsius [C].
+
+        get_cumulus_base(telescope=&#39;all&#39;)
+            Returns current cumulus cloud base.
+            Unit is meter [m].
+
+        get_rain(telescope=&#39;all&#39;)
+            Returns current rain precipitation.
+            Unit is mm/h.
+
+        get_uv_index(telescope=&#39;all&#39;)
+            Returns current uv index.
+            Unit is index.
+
+        get_solar_radiation(telescope=&#39;all&#39;)
+            Returns current solar radiation.
+            Unit is W / m^2.
+
+        get_air_density(telescope=&#39;all&#39;)
+            Returns current air density.
+            Unit is kg / m^3.
+
+        Examples
+        --------
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; data = met.get_last_meteo(&#39;RTT150&#39;)
+        &gt;&gt;&gt; print(data)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:36:06&#39;,
+            &#39;telescope&#39;: &#39;RTT150&#39;,
+            &#39;Temperature&#39;: 13.0,
+            &#39;Dome Temperature&#39;: 15.3,
+            &#39;Coude Temperature&#39;: 13.0,
+            &#39;Humidity&#39;: 51.0,
+            &#39;Dome Humidity&#39;: 48.0,
+            &#39;Coude Humidity&#39;: 57.0,
+            &#39;Barometer&#39;: 757.6,
+            &#39;Wind&#39;: 13.0,
+            &#39;Wind Chill&#39;: 13.0,
+            &#39;Dewpoint&#39;: 3.1,
+            &#39;High Temperature&#39;: 17.2,
+            &#39;Low Temperature&#39;: 11.7,
+            &#39;High Humidity&#39;: 54.0,
+            &#39;Low Humidity&#39;: 32.0,
+            &#39;High Barometer&#39;: 759.7,
+            &#39;Low Barometer&#39;: 757.0,
+            &#39;High Wind&#39;: 37.0,
+            &#39;Est. Cumulus Base&#39;: 1239.0
+        }
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; p = met.get_pressure(&#39;T60&#39;)
+        &gt;&gt;&gt; print(p)
+        {&#39;timestamp&#39;: &#39;2019-05-31T23:37:27&#39;, &#39;info&#39;: &#39;Pressure&#39;, &#39;T60&#39;: 758.1}
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; table = met.get_meteo_archives(start_date=&#39;2019-02-10&#39;,
+                                           end_date=&#39;2019-05-31&#39;)
+        &#34;&#34;&#34;
+
+        super(TugMeteo, self).__init__()
+
+        self._telescope = telescope
+
+        self._telescopes = [&#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39;]
+
+        self._telescopes_meteo_pages = {
+            &#39;RTT150&#39;: &#39;http://rtt150meteo.tug.tubitak.gov.tr&#39;,
+            &#39;T100&#39;: &#39;http://t100meteo.tug.tubitak.gov.tr&#39;,
+            &#39;T60&#39;: &#39;http://t60meteo.tug.tubitak.gov.tr/index.html/&#39;}
+
+        self._last_meteos = {&#39;RTT150&#39;: None, &#39;T100&#39;: None, &#39;T60&#39;: None}
+
+        self._meteo_archives = {&#39;RTT150&#39;: None, &#39;T100&#39;: None, &#39;T60&#39;: None}
+
+    def _get_meteo_page(self, telescope):
+        &#34;&#34;&#34;
+        Internal using only.
+        &#34;&#34;&#34;
+
+        if telescope in self._telescopes:
+            try:
+                respond = requests.get(
+                    self._telescopes_meteo_pages[telescope])
+            except requests.exceptions.RequestException as exp:
+                print(exp)
+                return None
+
+            return respond.text
+
+        return None
+
+    def _update(self, telescope):
+        &#34;&#34;&#34;
+        Internal using only.
+        &#34;&#34;&#34;
+
+        page = self._get_meteo_page(telescope)
+
+        if page is not None:
+            last_meteo = parse_meteo_page(page, telescope)
+            self._last_meteos[telescope] = last_meteo
+
+            return True
+
+        self._last_meteos[telescope] = None
+
+        return False
+
+    def _get_meteo_info(self, telescope, info_keywords, key):
+        &#34;&#34;&#34;
+        Internal using only.
+        &#34;&#34;&#34;
+
+        info = dict()
+        info[&#39;timestamp&#39;] = get_current_time_stamp()
+        info[&#39;info&#39;] = key
+
+        if self.get_last_meteo(telescope) is not None:
+            if telescope == &#39;all&#39;:
+                for tel in self._telescopes:
+                    keyword = info_keywords[tel]
+                    if keyword is not None:
+                        info[tel] = self._last_meteos[tel][keyword]
+                    else:
+                        info[tel] = None
+            else:
+                keyword = info_keywords[telescope]
+                if keyword is not None:
+                    info[telescope] = self._last_meteos[telescope][keyword]
+                else:
+                    info[telescope] = None
+
+            return info
+        else:
+            return None
+
+    def get_meteo_archives(self, telescope=&#39;RTT150&#39;, start_date=&#39;&#39;, end_date=&#39;&#39;,
+                           date_format=&#39;%Y-%m-%d&#39;):
+        &#34;&#34;&#34;
+        Gets meteorology archive from database with 5 min interval.
+
+        Parameters
+        ----------
+
+        telescope : str
+            The name of the meteorological station (telescope names).
+            Default value is &#39;RTT150&#39;.
+
+        start_date : str
+            Start date of the archive.
+            It must be in the format specified by &#39;date_format&#39;.
+            If None, return today&#39;s archive url.
+
+        end_date : str
+            End date of the archive.
+            It must be in the format specified by &#39;date_format&#39;.
+            If None, return today&#39;s archive url.
+
+        date_format : str
+            Date format for &#39;start_date&#39; and &#39;end_date&#39; parameters.
+
+        Returns
+        -------
+        &#39;pandas.DataFrame&#39;
+            Returned archive.
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; # Returns data from the archive for 7 days.
+        &gt;&gt;&gt; t = met.get_meteo_archives(telescope=&#39;T100&#39;,
+                                       start_date=&#39;2017-05-31&#39;,
+                                       end_date=&#39;2019-06-07&#39;)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; # Get today&#39;s archive (Default telescope is &#39;RTT150&#39;).
+        &gt;&gt;&gt; t = met.get_meteo_archives()
+        &#34;&#34;&#34;
+
+        if not isinstance(telescope, str):
+            raise TypeError(&#34;&#39;telescope&#39; should be a &#39;str&#39; object.&#34;)
+
+        if telescope not in self._telescopes:
+            raise ValueError(
+                &#34;&#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39; or &#39;T60&#39;.&#34;)
+
+        if not isinstance(start_date, str):
+            raise TypeError(&#34;&#39;start_date&#39; should be a &#39;str&#39; object.&#34;)
+
+        if not isinstance(end_date, str):
+            raise TypeError(&#34;&#39;end_date&#39; should be a &#39;str&#39; object.&#34;)
+
+        urls = generate_meteo_archive_urls(telescope, start_date,
+                                           end_date, date_format)
+
+        if urls is None:
+            return None
+
+        raw_archives = list()
+        for url in urls:
+            r = requests.get(url)
+            if not r.ok:
+                continue
+
+            raw_archives.append(r.text)
+
+        tables = list()
+        for raw_archive in raw_archives:
+            table = parse_meteo_archive(raw_archive)
+            tables.append(table)
+
+        t = concat_meteo_archive(tables)
+
+        self._meteo_archives[telescope] = t
+
+        return t
+
+    def get_last_meteo(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Return current all meteorological data.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        Type of &#39;dict&#39;
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; data = met.get_last_meteo(&#39;RTT150&#39;)
+        &gt;&gt;&gt; print(data)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:55:33&#39;,
+            &#39;telescope&#39;: &#39;RTT150&#39;,
+            &#39;Temperature&#39;: 13.8,
+            &#39;Dome Temperature&#39;: 14.7,
+            &#39;Coude Temperature&#39;: 13.0,
+            &#39;Humidity&#39;: 43.0,
+            &#39;Dome Humidity&#39;: 42.0,
+            &#39;Coude Humidity&#39;: 57.0,
+            &#39;Barometer&#39;: 757.7,
+            &#39;Wind&#39;: 10.0,
+            &#39;Wind Chill&#39;: 13.8,
+            &#39;Dewpoint&#39;: 1.5,
+            &#39;High Temperature&#39;: 17.2,
+            &#39;Low Temperature&#39;: 11.7,
+            &#39;High Humidity&#39;: 54.0,
+            &#39;Low Humidity&#39;: 32.0,
+            &#39;High Barometer&#39;: 759.7,
+            &#39;Low Barometer&#39;: 757.0,
+            &#39;High Wind&#39;: 37.0,
+            &#39;Est. Cumulus Base&#39;: 1547.0
+        }
+        &#34;&#34;&#34;
+
+        if telescope == &#39;all&#39;:
+            self._telescope = telescope
+
+            for telescope in self._telescopes:
+                self._update(telescope)
+
+            return self._last_meteos
+
+        if telescope in self._telescopes:
+            self._telescope = telescope
+
+            self._update(telescope)
+
+            return self._last_meteos[telescope]
+
+        return None
+
+    def get_temperature(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current temperature.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Temperature value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_temperature(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:54:30&#39;,
+            &#39;info&#39;: &#39;Temperature&#39;,
+            &#39;RTT150&#39;: 13.9,
+            &#39;T100&#39;: 13.5,
+            &#39;T60&#39;: 13.8
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Temperature&#39;,
+            &#39;T100&#39;: &#39;TEMPERATURE&#39;,
+            &#39;T60&#39;: &#39;TEMPERATURE&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Temperature&#39;)
+
+    def get_dome_temperature(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current dome temperature.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Dome temperature value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_dome_temperature(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:57:15&#39;,
+            &#39;info&#39;: &#39;Dome Temperature&#39;,
+            &#39;RTT150&#39;: 14.7,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: 17.2
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Dome Temperature&#39;,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: &#39;Inside Temperature&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords,
+                                    &#39;Dome Temperature&#39;)
+
+    def get_humidity(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current humidity.
+        Unit is RH [%].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Humidity value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_humidity(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T22:58:18&#39;,
+            &#39;info&#39;: &#39;Humidity&#39;,
+            &#39;RTT150&#39;: 44.0,
+            &#39;T100&#39;: 43.0,
+            &#39;T60&#39;: 42.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Humidity&#39;,
+            &#39;T100&#39;: &#39;HUMIDITY&#39;,
+            &#39;T60&#39;: &#39;HUMIDITY&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Humidity&#39;)
+
+    def get_dome_humidity(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current dome humidity.
+        Unit is RH [%].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Dome humidity value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_dome_humidity(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:01:30&#39;,
+            &#39;info&#39;: &#39;Dome Humidity&#39;,
+            &#39;RTT150&#39;: 43.0,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: 36.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Dome Humidity&#39;,
+            &#39;T100&#39;: None,
+            &#39;T60&#39;: &#39;Inside Humidity&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Dome Humidity&#39;)
+
+    def get_pressure(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current pressure.
+        Unit is millibar [mb].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Pressure value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_pressure(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:04:42&#39;,
+            &#39;info&#39;: &#39;Pressure&#39;,
+            &#39;RTT150&#39;: 757.7,
+            &#39;T100&#39;: 755.8,
+            &#39;T60&#39;: 757.9
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Barometer&#39;,
+            &#39;T100&#39;: &#39;PRESSURE&#39;,
+            &#39;T60&#39;: &#39;PRESSURE&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Pressure&#39;)
+
+    def get_wind_speed(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current wind speed.
+        Unit is km/h.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Wind speed value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_wind_speed(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:07:08&#39;,
+            &#39;info&#39;: &#39;Wind Speed&#39;,
+            &#39;RTT150&#39;: 6.0,
+            &#39;T100&#39;: 24.1,
+            &#39;T60&#39;: 11.3
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Wind&#39;,
+            &#39;T100&#39;: &#39;WINDSPEED&#39;,
+            &#39;T60&#39;: &#39;WINDSPEED&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Wind Speed&#39;)
+
+    def get_wind_chill(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current wind chill.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Wind chill value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_wind_chill(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:09:06&#39;,
+            &#39;info&#39;: &#39;Wind Chill&#39;,
+            &#39;RTT150&#39;: 13.4,
+            &#39;T100&#39;: 13.1,
+            &#39;T60&#39;: 13.5
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Wind Chill&#39;,
+            &#39;T100&#39;: &#39;Wind Chill&#39;,
+            &#39;T60&#39;: &#39;Wind Chill&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Wind Chill&#39;)
+
+    def get_wind_direction(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current wind direction (azimuth -&gt; from North).
+        Unit is Degree.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Wind chill value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_wind_direction(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:10:31&#39;,
+            &#39;info&#39;: &#39;Wind Direction&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 59.0,
+            &#39;T60&#39;: 238.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;WINDDIR&#39;,
+            &#39;T60&#39;: &#39;WINDDIR&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Wind Direction&#39;)
+
+    def get_dew_point(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current dew point.
+        Unit is Celsius [C].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Dew point value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_dew_point(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:12:02&#39;,
+            &#39;info&#39;: &#39;Dew Point&#39;,
+            &#39;RTT150&#39;: 2.0,
+            &#39;T100&#39;: 1.7,
+            &#39;T60&#39;: 1.7
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Dewpoint&#39;,
+            &#39;T100&#39;: &#39;Dew Point&#39;,
+            &#39;T60&#39;: &#39;Dew Point&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Dew Point&#39;)
+
+    def get_cumulus_base(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current cumulus cloud base.
+        Unit is meter [m].
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Cumulus base value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_cumulus_base(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:13:19&#39;,
+            &#39;info&#39;: &#39;Est. Cumulus Base&#39;,
+            &#39;RTT150&#39;: 1387.0,
+            &#39;T100&#39;: 1383.0,
+            &#39;T60&#39;: 1463.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: &#39;Est. Cumulus Base&#39;,
+            &#39;T100&#39;: &#39;Est. Cumulus Base&#39;,
+            &#39;T60&#39;: &#39;Est. Cumulus Base&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords,
+                                    &#39;Est. Cumulus Base&#39;)
+
+    def get_rain(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current rain precipitation.
+        Unit is mm/h.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Rain precipitation value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_rain(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:15:08&#39;,
+            &#39;info&#39;: &#39;Rain&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.0,
+            &#39;T60&#39;: 0.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;RAIN&#39;,
+            &#39;T60&#39;: &#39;RAIN&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Rain&#39;)
+
+    def get_uv_index(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current uv index.
+        Unit is index.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            UV index value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_uv_index(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:16:08&#39;,
+            &#39;info&#39;: &#39;UV Index&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.0,
+            &#39;T60&#39;: 0.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;UV&#39;,
+            &#39;T60&#39;: &#39;UV&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;UV Index&#39;)
+
+    def get_solar_radiation(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current solar radiation.
+        Unit is W / m^2.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Solar radiation value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_solar_radiation(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:17:40&#39;,
+            &#39;info&#39;: &#39;Solar Radiation&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.0,
+            &#39;T60&#39;: 0.0
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;Solar Radiation&#39;,
+            &#39;T60&#39;: &#39;Solar Radiation&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords,
+                                    &#39;Solar Radiation&#39;)
+
+    def get_air_density(self, telescope=&#39;all&#39;):
+        &#34;&#34;&#34;
+        Returns current air density.
+        Unit is kg / m^3.
+
+        Parameters
+        ----------
+        telescope : str
+            Telescope name.
+            &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+            Default value is &#39;all&#39;.
+
+        Returns
+        -------
+        type of &#39;dict&#39;
+            Air density value(s)
+
+        Examples
+        --------
+
+        &gt;&gt;&gt; from tugmeteo import TugMeteo
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; met = TugMeteo()
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; t = met.get_air_density(&#39;all&#39;)
+        &gt;&gt;&gt; print(t)
+        {
+            &#39;timestamp&#39;: &#39;2019-05-31T23:18:41&#39;,
+            &#39;info&#39;: &#39;Air Density&#39;,
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: 0.917,
+            &#39;T60&#39;: 0.918
+        }
+        &#34;&#34;&#34;
+
+        info_keywords = {
+            &#39;RTT150&#39;: None,
+            &#39;T100&#39;: &#39;Air Density&#39;,
+            &#39;T60&#39;: &#39;Air Density&#39;}
+
+        return self._get_meteo_info(telescope, info_keywords, &#39;Air Density&#39;)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="tugmeteo.core.TugMeteo.get_air_density"><code class="name flex">
+<span>def <span class="ident">get_air_density</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current air density.
+Unit is kg / m^3.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Air density value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_air_density('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:18:41',
+'info': 'Air Density',
+'RTT150': None,
+'T100': 0.917,
+'T60': 0.918
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_air_density(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current air density.
+    Unit is kg / m^3.
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Air density value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_air_density(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:18:41&#39;,
+        &#39;info&#39;: &#39;Air Density&#39;,
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: 0.917,
+        &#39;T60&#39;: 0.918
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: &#39;Air Density&#39;,
+        &#39;T60&#39;: &#39;Air Density&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Air Density&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_cumulus_base"><code class="name flex">
+<span>def <span class="ident">get_cumulus_base</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current cumulus cloud base.
+Unit is meter [m].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Cumulus base value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_cumulus_base('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:13:19',
+'info': 'Est. Cumulus Base',
+'RTT150': 1387.0,
+'T100': 1383.0,
+'T60': 1463.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_cumulus_base(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current cumulus cloud base.
+    Unit is meter [m].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Cumulus base value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_cumulus_base(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:13:19&#39;,
+        &#39;info&#39;: &#39;Est. Cumulus Base&#39;,
+        &#39;RTT150&#39;: 1387.0,
+        &#39;T100&#39;: 1383.0,
+        &#39;T60&#39;: 1463.0
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Est. Cumulus Base&#39;,
+        &#39;T100&#39;: &#39;Est. Cumulus Base&#39;,
+        &#39;T60&#39;: &#39;Est. Cumulus Base&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords,
+                                &#39;Est. Cumulus Base&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_dew_point"><code class="name flex">
+<span>def <span class="ident">get_dew_point</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current dew point.
+Unit is Celsius [C].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Dew point value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_dew_point('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:12:02',
+'info': 'Dew Point',
+'RTT150': 2.0,
+'T100': 1.7,
+'T60': 1.7
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_dew_point(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current dew point.
+    Unit is Celsius [C].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Dew point value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_dew_point(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:12:02&#39;,
+        &#39;info&#39;: &#39;Dew Point&#39;,
+        &#39;RTT150&#39;: 2.0,
+        &#39;T100&#39;: 1.7,
+        &#39;T60&#39;: 1.7
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Dewpoint&#39;,
+        &#39;T100&#39;: &#39;Dew Point&#39;,
+        &#39;T60&#39;: &#39;Dew Point&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Dew Point&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_dome_humidity"><code class="name flex">
+<span>def <span class="ident">get_dome_humidity</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current dome humidity.
+Unit is RH [%].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Dome humidity value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_dome_humidity('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:01:30',
+'info': 'Dome Humidity',
+'RTT150': 43.0,
+'T100': None,
+'T60': 36.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_dome_humidity(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current dome humidity.
+    Unit is RH [%].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Dome humidity value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_dome_humidity(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:01:30&#39;,
+        &#39;info&#39;: &#39;Dome Humidity&#39;,
+        &#39;RTT150&#39;: 43.0,
+        &#39;T100&#39;: None,
+        &#39;T60&#39;: 36.0
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Dome Humidity&#39;,
+        &#39;T100&#39;: None,
+        &#39;T60&#39;: &#39;Inside Humidity&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Dome Humidity&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_dome_temperature"><code class="name flex">
+<span>def <span class="ident">get_dome_temperature</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current dome temperature.
+Unit is Celsius [C].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Dome temperature value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_dome_temperature('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T22:57:15',
+'info': 'Dome Temperature',
+'RTT150': 14.7,
+'T100': None,
+'T60': 17.2
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_dome_temperature(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current dome temperature.
+    Unit is Celsius [C].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Dome temperature value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_dome_temperature(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T22:57:15&#39;,
+        &#39;info&#39;: &#39;Dome Temperature&#39;,
+        &#39;RTT150&#39;: 14.7,
+        &#39;T100&#39;: None,
+        &#39;T60&#39;: 17.2
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Dome Temperature&#39;,
+        &#39;T100&#39;: None,
+        &#39;T60&#39;: &#39;Inside Temperature&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords,
+                                &#39;Dome Temperature&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_humidity"><code class="name flex">
+<span>def <span class="ident">get_humidity</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current humidity.
+Unit is RH [%].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Humidity value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_humidity('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T22:58:18',
+'info': 'Humidity',
+'RTT150': 44.0,
+'T100': 43.0,
+'T60': 42.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_humidity(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current humidity.
+    Unit is RH [%].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Humidity value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_humidity(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T22:58:18&#39;,
+        &#39;info&#39;: &#39;Humidity&#39;,
+        &#39;RTT150&#39;: 44.0,
+        &#39;T100&#39;: 43.0,
+        &#39;T60&#39;: 42.0
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Humidity&#39;,
+        &#39;T100&#39;: &#39;HUMIDITY&#39;,
+        &#39;T60&#39;: &#39;HUMIDITY&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Humidity&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_last_meteo"><code class="name flex">
+<span>def <span class="ident">get_last_meteo</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Return current all meteorological data.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Type</code> of <code>'dict'</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; data = met.get_last_meteo('RTT150')
+&gt;&gt;&gt; print(data)
+{
+
+
+'timestamp': '2019-05-31T22:55:33',
+'telescope': 'RTT150',
+'Temperature': 13.8,
+'Dome Temperature': 14.7,
+'Coude Temperature': 13.0,
+'Humidity': 43.0,
+'Dome Humidity': 42.0,
+'Coude Humidity': 57.0,
+'Barometer': 757.7,
+'Wind': 10.0,
+'Wind Chill': 13.8,
+'Dewpoint': 1.5,
+'High Temperature': 17.2,
+'Low Temperature': 11.7,
+'High Humidity': 54.0,
+'Low Humidity': 32.0,
+'High Barometer': 759.7,
+'Low Barometer': 757.0,
+'High Wind': 37.0,
+'Est. Cumulus Base': 1547.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_last_meteo(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Return current all meteorological data.
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    Type of &#39;dict&#39;
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; data = met.get_last_meteo(&#39;RTT150&#39;)
+    &gt;&gt;&gt; print(data)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T22:55:33&#39;,
+        &#39;telescope&#39;: &#39;RTT150&#39;,
+        &#39;Temperature&#39;: 13.8,
+        &#39;Dome Temperature&#39;: 14.7,
+        &#39;Coude Temperature&#39;: 13.0,
+        &#39;Humidity&#39;: 43.0,
+        &#39;Dome Humidity&#39;: 42.0,
+        &#39;Coude Humidity&#39;: 57.0,
+        &#39;Barometer&#39;: 757.7,
+        &#39;Wind&#39;: 10.0,
+        &#39;Wind Chill&#39;: 13.8,
+        &#39;Dewpoint&#39;: 1.5,
+        &#39;High Temperature&#39;: 17.2,
+        &#39;Low Temperature&#39;: 11.7,
+        &#39;High Humidity&#39;: 54.0,
+        &#39;Low Humidity&#39;: 32.0,
+        &#39;High Barometer&#39;: 759.7,
+        &#39;Low Barometer&#39;: 757.0,
+        &#39;High Wind&#39;: 37.0,
+        &#39;Est. Cumulus Base&#39;: 1547.0
+    }
+    &#34;&#34;&#34;
+
+    if telescope == &#39;all&#39;:
+        self._telescope = telescope
+
+        for telescope in self._telescopes:
+            self._update(telescope)
+
+        return self._last_meteos
+
+    if telescope in self._telescopes:
+        self._telescope = telescope
+
+        self._update(telescope)
+
+        return self._last_meteos[telescope]
+
+    return None</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_meteo_archives"><code class="name flex">
+<span>def <span class="ident">get_meteo_archives</span></span>(<span>self, telescope='RTT150', start_date='', end_date='', date_format='%Y-%m-%d')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets meteorology archive from database with 5 min interval.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name of the meteorological station (telescope names).
+Default value is 'RTT150'.</dd>
+<dt><strong><code>start_date</code></strong> :&ensp;<code>str</code></dt>
+<dd>Start date of the archive.
+It must be in the format specified by 'date_format'.
+If None, return today's archive url.</dd>
+<dt><strong><code>end_date</code></strong> :&ensp;<code>str</code></dt>
+<dd>End date of the archive.
+It must be in the format specified by 'date_format'.
+If None, return today's archive url.</dd>
+<dt><strong><code>date_format</code></strong> :&ensp;<code>str</code></dt>
+<dd>Date format for 'start_date' and 'end_date' parameters.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>'pandas.DataFrame'
+Returned archive.</p>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Returns data from the archive for 7 days.
+&gt;&gt;&gt; t = met.get_meteo_archives(telescope='T100',
+                               start_date='2017-05-31',
+
+
+                           end_date='2019-06-07')
+
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Get today's archive (Default telescope is 'RTT150').
+</code></pre>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>t = met.get_meteo_archives()</p>
+</blockquote>
+</blockquote>
+</blockquote></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_meteo_archives(self, telescope=&#39;RTT150&#39;, start_date=&#39;&#39;, end_date=&#39;&#39;,
+                       date_format=&#39;%Y-%m-%d&#39;):
+    &#34;&#34;&#34;
+    Gets meteorology archive from database with 5 min interval.
+
+    Parameters
+    ----------
+
+    telescope : str
+        The name of the meteorological station (telescope names).
+        Default value is &#39;RTT150&#39;.
+
+    start_date : str
+        Start date of the archive.
+        It must be in the format specified by &#39;date_format&#39;.
+        If None, return today&#39;s archive url.
+
+    end_date : str
+        End date of the archive.
+        It must be in the format specified by &#39;date_format&#39;.
+        If None, return today&#39;s archive url.
+
+    date_format : str
+        Date format for &#39;start_date&#39; and &#39;end_date&#39; parameters.
+
+    Returns
+    -------
+    &#39;pandas.DataFrame&#39;
+        Returned archive.
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; # Returns data from the archive for 7 days.
+    &gt;&gt;&gt; t = met.get_meteo_archives(telescope=&#39;T100&#39;,
+                                   start_date=&#39;2017-05-31&#39;,
+                                   end_date=&#39;2019-06-07&#39;)
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; # Get today&#39;s archive (Default telescope is &#39;RTT150&#39;).
+    &gt;&gt;&gt; t = met.get_meteo_archives()
+    &#34;&#34;&#34;
+
+    if not isinstance(telescope, str):
+        raise TypeError(&#34;&#39;telescope&#39; should be a &#39;str&#39; object.&#34;)
+
+    if telescope not in self._telescopes:
+        raise ValueError(
+            &#34;&#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39; or &#39;T60&#39;.&#34;)
+
+    if not isinstance(start_date, str):
+        raise TypeError(&#34;&#39;start_date&#39; should be a &#39;str&#39; object.&#34;)
+
+    if not isinstance(end_date, str):
+        raise TypeError(&#34;&#39;end_date&#39; should be a &#39;str&#39; object.&#34;)
+
+    urls = generate_meteo_archive_urls(telescope, start_date,
+                                       end_date, date_format)
+
+    if urls is None:
+        return None
+
+    raw_archives = list()
+    for url in urls:
+        r = requests.get(url)
+        if not r.ok:
+            continue
+
+        raw_archives.append(r.text)
+
+    tables = list()
+    for raw_archive in raw_archives:
+        table = parse_meteo_archive(raw_archive)
+        tables.append(table)
+
+    t = concat_meteo_archive(tables)
+
+    self._meteo_archives[telescope] = t
+
+    return t</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_pressure"><code class="name flex">
+<span>def <span class="ident">get_pressure</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current pressure.
+Unit is millibar [mb].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Pressure value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_pressure('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:04:42',
+'info': 'Pressure',
+'RTT150': 757.7,
+'T100': 755.8,
+'T60': 757.9
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_pressure(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current pressure.
+    Unit is millibar [mb].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Pressure value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_pressure(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:04:42&#39;,
+        &#39;info&#39;: &#39;Pressure&#39;,
+        &#39;RTT150&#39;: 757.7,
+        &#39;T100&#39;: 755.8,
+        &#39;T60&#39;: 757.9
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Barometer&#39;,
+        &#39;T100&#39;: &#39;PRESSURE&#39;,
+        &#39;T60&#39;: &#39;PRESSURE&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Pressure&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_rain"><code class="name flex">
+<span>def <span class="ident">get_rain</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current rain precipitation.
+Unit is mm/h.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Rain precipitation value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_rain('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:15:08',
+'info': 'Rain',
+'RTT150': None,
+'T100': 0.0,
+'T60': 0.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_rain(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current rain precipitation.
+    Unit is mm/h.
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Rain precipitation value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_rain(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:15:08&#39;,
+        &#39;info&#39;: &#39;Rain&#39;,
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: 0.0,
+        &#39;T60&#39;: 0.0
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: &#39;RAIN&#39;,
+        &#39;T60&#39;: &#39;RAIN&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Rain&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_solar_radiation"><code class="name flex">
+<span>def <span class="ident">get_solar_radiation</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current solar radiation.
+Unit is W / m^2.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Solar radiation value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_solar_radiation('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:17:40',
+'info': 'Solar Radiation',
+'RTT150': None,
+'T100': 0.0,
+'T60': 0.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_solar_radiation(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current solar radiation.
+    Unit is W / m^2.
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Solar radiation value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_solar_radiation(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:17:40&#39;,
+        &#39;info&#39;: &#39;Solar Radiation&#39;,
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: 0.0,
+        &#39;T60&#39;: 0.0
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: &#39;Solar Radiation&#39;,
+        &#39;T60&#39;: &#39;Solar Radiation&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords,
+                                &#39;Solar Radiation&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_temperature"><code class="name flex">
+<span>def <span class="ident">get_temperature</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current temperature.
+Unit is Celsius [C].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Temperature value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_temperature('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T22:54:30',
+'info': 'Temperature',
+'RTT150': 13.9,
+'T100': 13.5,
+'T60': 13.8
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_temperature(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current temperature.
+    Unit is Celsius [C].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Temperature value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_temperature(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T22:54:30&#39;,
+        &#39;info&#39;: &#39;Temperature&#39;,
+        &#39;RTT150&#39;: 13.9,
+        &#39;T100&#39;: 13.5,
+        &#39;T60&#39;: 13.8
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Temperature&#39;,
+        &#39;T100&#39;: &#39;TEMPERATURE&#39;,
+        &#39;T60&#39;: &#39;TEMPERATURE&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Temperature&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_uv_index"><code class="name flex">
+<span>def <span class="ident">get_uv_index</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current uv index.
+Unit is index.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>UV index value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_uv_index('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:16:08',
+'info': 'UV Index',
+'RTT150': None,
+'T100': 0.0,
+'T60': 0.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_uv_index(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current uv index.
+    Unit is index.
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        UV index value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_uv_index(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:16:08&#39;,
+        &#39;info&#39;: &#39;UV Index&#39;,
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: 0.0,
+        &#39;T60&#39;: 0.0
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: &#39;UV&#39;,
+        &#39;T60&#39;: &#39;UV&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;UV Index&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_wind_chill"><code class="name flex">
+<span>def <span class="ident">get_wind_chill</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current wind chill.
+Unit is Celsius [C].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Wind chill value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_wind_chill('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:09:06',
+'info': 'Wind Chill',
+'RTT150': 13.4,
+'T100': 13.1,
+'T60': 13.5
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_wind_chill(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current wind chill.
+    Unit is Celsius [C].
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Wind chill value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_wind_chill(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:09:06&#39;,
+        &#39;info&#39;: &#39;Wind Chill&#39;,
+        &#39;RTT150&#39;: 13.4,
+        &#39;T100&#39;: 13.1,
+        &#39;T60&#39;: 13.5
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Wind Chill&#39;,
+        &#39;T100&#39;: &#39;Wind Chill&#39;,
+        &#39;T60&#39;: &#39;Wind Chill&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Wind Chill&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_wind_direction"><code class="name flex">
+<span>def <span class="ident">get_wind_direction</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current wind direction (azimuth -&gt; from North).
+Unit is Degree.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Wind chill value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_wind_direction('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:10:31',
+'info': 'Wind Direction',
+'RTT150': None,
+'T100': 59.0,
+'T60': 238.0
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_wind_direction(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current wind direction (azimuth -&gt; from North).
+    Unit is Degree.
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Wind chill value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_wind_direction(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:10:31&#39;,
+        &#39;info&#39;: &#39;Wind Direction&#39;,
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: 59.0,
+        &#39;T60&#39;: 238.0
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: None,
+        &#39;T100&#39;: &#39;WINDDIR&#39;,
+        &#39;T60&#39;: &#39;WINDDIR&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Wind Direction&#39;)</code></pre>
+</details>
+</dd>
+<dt id="tugmeteo.core.TugMeteo.get_wind_speed"><code class="name flex">
+<span>def <span class="ident">get_wind_speed</span></span>(<span>self, telescope='all')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns current wind speed.
+Unit is km/h.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>telescope</code></strong> :&ensp;<code>str</code></dt>
+<dd>Telescope name.
+'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+Default value is 'all'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>type</code> of <code>'dict'</code></dt>
+<dd>Wind speed value(s)</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; from tugmeteo import TugMeteo
+&gt;&gt;&gt;
+&gt;&gt;&gt; met = TugMeteo()
+&gt;&gt;&gt;
+&gt;&gt;&gt; t = met.get_wind_speed('all')
+&gt;&gt;&gt; print(t)
+{
+
+
+'timestamp': '2019-05-31T23:07:08',
+'info': 'Wind Speed',
+'RTT150': 6.0,
+'T100': 24.1,
+'T60': 11.3
+</code></pre>
+<p>}</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_wind_speed(self, telescope=&#39;all&#39;):
+    &#34;&#34;&#34;
+    Returns current wind speed.
+    Unit is km/h.
+
+    Parameters
+    ----------
+    telescope : str
+        Telescope name.
+        &#39;telescope&#39; must be one of &#39;RTT150&#39;, &#39;T100&#39;, &#39;T60&#39; or &#39;all&#39;.
+        Default value is &#39;all&#39;.
+
+    Returns
+    -------
+    type of &#39;dict&#39;
+        Wind speed value(s)
+
+    Examples
+    --------
+
+    &gt;&gt;&gt; from tugmeteo import TugMeteo
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; met = TugMeteo()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; t = met.get_wind_speed(&#39;all&#39;)
+    &gt;&gt;&gt; print(t)
+    {
+        &#39;timestamp&#39;: &#39;2019-05-31T23:07:08&#39;,
+        &#39;info&#39;: &#39;Wind Speed&#39;,
+        &#39;RTT150&#39;: 6.0,
+        &#39;T100&#39;: 24.1,
+        &#39;T60&#39;: 11.3
+    }
+    &#34;&#34;&#34;
+
+    info_keywords = {
+        &#39;RTT150&#39;: &#39;Wind&#39;,
+        &#39;T100&#39;: &#39;WINDSPEED&#39;,
+        &#39;T60&#39;: &#39;WINDSPEED&#39;}
+
+    return self._get_meteo_info(telescope, info_keywords, &#39;Wind Speed&#39;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tugmeteo" href="index.html">tugmeteo</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tugmeteo.core.TugMeteo" href="#tugmeteo.core.TugMeteo">TugMeteo</a></code></h4>
+<ul class="">
+<li><code><a title="tugmeteo.core.TugMeteo.get_air_density" href="#tugmeteo.core.TugMeteo.get_air_density">get_air_density</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_cumulus_base" href="#tugmeteo.core.TugMeteo.get_cumulus_base">get_cumulus_base</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_dew_point" href="#tugmeteo.core.TugMeteo.get_dew_point">get_dew_point</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_dome_humidity" href="#tugmeteo.core.TugMeteo.get_dome_humidity">get_dome_humidity</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_dome_temperature" href="#tugmeteo.core.TugMeteo.get_dome_temperature">get_dome_temperature</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_humidity" href="#tugmeteo.core.TugMeteo.get_humidity">get_humidity</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_last_meteo" href="#tugmeteo.core.TugMeteo.get_last_meteo">get_last_meteo</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_meteo_archives" href="#tugmeteo.core.TugMeteo.get_meteo_archives">get_meteo_archives</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_pressure" href="#tugmeteo.core.TugMeteo.get_pressure">get_pressure</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_rain" href="#tugmeteo.core.TugMeteo.get_rain">get_rain</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_solar_radiation" href="#tugmeteo.core.TugMeteo.get_solar_radiation">get_solar_radiation</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_temperature" href="#tugmeteo.core.TugMeteo.get_temperature">get_temperature</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_uv_index" href="#tugmeteo.core.TugMeteo.get_uv_index">get_uv_index</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_wind_chill" href="#tugmeteo.core.TugMeteo.get_wind_chill">get_wind_chill</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_wind_direction" href="#tugmeteo.core.TugMeteo.get_wind_direction">get_wind_direction</a></code></li>
+<li><code><a title="tugmeteo.core.TugMeteo.get_wind_speed" href="#tugmeteo.core.TugMeteo.get_wind_speed">get_wind_speed</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.2</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
