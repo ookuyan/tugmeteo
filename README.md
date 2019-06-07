@@ -17,6 +17,7 @@ print(data)
 ```json
 {
     "timestamp": "2019-05-30T18:45:31",
+    "telescope": "RTT150",
     "Temperature": 16.6,
     "Dome Temperature": 18.3,
     "Coude Temperature": 12.8,
