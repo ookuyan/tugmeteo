@@ -219,12 +219,20 @@ class TugMeteo(object):
         start_date : str
             Start date of the archive.
             It must be in the format specified by 'date_format'.
-            If None, return today's archive url.
+            If None, return today's archive.
 
         end_date : str
             End date of the archive.
             It must be in the format specified by 'date_format'.
-            If None, return today's archive url.
+
+            If  'start_date' and 'end_date' are empty,
+                return today's archive.
+
+            If 'start_date' is not empty and 'end_date' is empty,
+                returns archive between 'start_date' and 'end_date'.
+
+            If 'end_date' is None and 'start_date' is not None
+                returns archive between 'start_date' and today.
 
         date_format : str
             Date format for 'start_date' and 'end_date' parameters.

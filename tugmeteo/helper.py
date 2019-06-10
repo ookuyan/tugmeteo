@@ -87,7 +87,14 @@ def parse_meteo_page(html, telescope):
 
 
 def generate_meteo_archive_urls(telescope, start_date, end_date, date_format):
-    if (start_date == '') or (end_date == ''):
+    if (start_date != '') and (end_date == ''):
+        try:
+            start_date = datetime.strptime(start_date, date_format)
+        except ValueError as error:
+            raise ValueError(error)
+
+        end_date = datetime.today() + timedelta(days=1)
+    elif (start_date == '') or (end_date == ''):
         start_date = datetime.today()
         end_date = start_date + timedelta(days=1)
     else:
