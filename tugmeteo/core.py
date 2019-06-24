@@ -185,6 +185,9 @@ class TugMeteo(object):
         info['timestamp'] = get_current_time_stamp()
         info['info'] = key
 
+        # test
+        info['unit'] = info_keywords['unit']
+
         if self.get_last_meteo(telescope) is not None:
             if telescope == 'all':
                 for tel in self._telescopes:
@@ -196,7 +199,10 @@ class TugMeteo(object):
             else:
                 keyword = info_keywords[telescope]
                 if keyword is not None:
-                    info[telescope] = self._last_meteos[telescope][keyword]
+                    info['telescope'] = telescope
+                    info['value'] = self._last_meteos[telescope][keyword]
+
+                    # info[telescope] = self._last_meteos[telescope][keyword]
                 else:
                     info[telescope] = None
 
@@ -387,6 +393,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T22:54:30',
             'info': 'Temperature',
+            'unit': 'C',
             'RTT150': 13.9,
             'T100': 13.5,
             'T60': 13.8
@@ -396,7 +403,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Temperature',
             'T100': 'TEMPERATURE',
-            'T60': 'TEMPERATURE'}
+            'T60': 'TEMPERATURE',
+            'unit': 'C'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Temperature')
 
@@ -429,6 +438,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T22:57:15',
             'info': 'Dome Temperature',
+            'unit': 'C',
             'RTT150': 14.7,
             'T100': None,
             'T60': 17.2
@@ -438,7 +448,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Dome Temperature',
             'T100': None,
-            'T60': 'Inside Temperature'}
+            'T60': 'Inside Temperature',
+            'unit': 'C'
+        }
 
         return self._get_meteo_info(telescope, info_keywords,
                                     'Dome Temperature')
@@ -472,6 +484,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T22:58:18',
             'info': 'Humidity',
+            'unit': 'RH',
             'RTT150': 44.0,
             'T100': 43.0,
             'T60': 42.0
@@ -481,7 +494,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Humidity',
             'T100': 'HUMIDITY',
-            'T60': 'HUMIDITY'}
+            'T60': 'HUMIDITY',
+            'unit': 'RH'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Humidity')
 
@@ -514,6 +529,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:01:30',
             'info': 'Dome Humidity',
+            'unit': 'RH',
             'RTT150': 43.0,
             'T100': None,
             'T60': 36.0
@@ -523,7 +539,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Dome Humidity',
             'T100': None,
-            'T60': 'Inside Humidity'}
+            'T60': 'Inside Humidity',
+            'unit': 'RH'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Dome Humidity')
 
@@ -556,6 +574,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:04:42',
             'info': 'Pressure',
+            'unit': 'mb',
             'RTT150': 757.7,
             'T100': 755.8,
             'T60': 757.9
@@ -565,7 +584,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Barometer',
             'T100': 'PRESSURE',
-            'T60': 'PRESSURE'}
+            'T60': 'PRESSURE',
+            'unit': 'mb'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Pressure')
 
@@ -598,6 +619,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:07:08',
             'info': 'Wind Speed',
+            'unit': 'km/h',
             'RTT150': 6.0,
             'T100': 24.1,
             'T60': 11.3
@@ -607,7 +629,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Wind',
             'T100': 'WINDSPEED',
-            'T60': 'WINDSPEED'}
+            'T60': 'WINDSPEED',
+            'unit': 'km/h'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Wind Speed')
 
@@ -640,6 +664,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:09:06',
             'info': 'Wind Chill',
+            'unit': 'C',
             'RTT150': 13.4,
             'T100': 13.1,
             'T60': 13.5
@@ -649,7 +674,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Wind Chill',
             'T100': 'Wind Chill',
-            'T60': 'Wind Chill'}
+            'T60': 'Wind Chill',
+            'unit': 'C'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Wind Chill')
 
@@ -682,6 +709,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:10:31',
             'info': 'Wind Direction',
+            'unit': 'deg',
             'RTT150': None,
             'T100': 59.0,
             'T60': 238.0
@@ -691,7 +719,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': None,
             'T100': 'WINDDIR',
-            'T60': 'WINDDIR'}
+            'T60': 'WINDDIR',
+            'unit': 'deg'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Wind Direction')
 
@@ -724,6 +754,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:12:02',
             'info': 'Dew Point',
+            'unit': 'C',
             'RTT150': 2.0,
             'T100': 1.7,
             'T60': 1.7
@@ -733,7 +764,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Dewpoint',
             'T100': 'Dew Point',
-            'T60': 'Dew Point'}
+            'T60': 'Dew Point',
+            'unit': 'C'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Dew Point')
 
@@ -766,6 +799,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:13:19',
             'info': 'Est. Cumulus Base',
+            'unit': 'm',
             'RTT150': 1387.0,
             'T100': 1383.0,
             'T60': 1463.0
@@ -775,7 +809,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': 'Est. Cumulus Base',
             'T100': 'Est. Cumulus Base',
-            'T60': 'Est. Cumulus Base'}
+            'T60': 'Est. Cumulus Base',
+            'unit': 'm'
+        }
 
         return self._get_meteo_info(telescope, info_keywords,
                                     'Est. Cumulus Base')
@@ -809,6 +845,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:15:08',
             'info': 'Rain',
+            'unit': 'mm/h',
             'RTT150': None,
             'T100': 0.0,
             'T60': 0.0
@@ -818,7 +855,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': None,
             'T100': 'RAIN',
-            'T60': 'RAIN'}
+            'T60': 'RAIN',
+            'unit': 'mm/h'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Rain')
 
@@ -851,6 +890,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:16:08',
             'info': 'UV Index',
+            'unit': 'index',
             'RTT150': None,
             'T100': 0.0,
             'T60': 0.0
@@ -860,7 +900,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': None,
             'T100': 'UV',
-            'T60': 'UV'}
+            'T60': 'UV',
+            'unit': 'index'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'UV Index')
 
@@ -893,6 +935,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:17:40',
             'info': 'Solar Radiation',
+            'unit': 'W / m^2',
             'RTT150': None,
             'T100': 0.0,
             'T60': 0.0
@@ -902,7 +945,9 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': None,
             'T100': 'Solar Radiation',
-            'T60': 'Solar Radiation'}
+            'T60': 'Solar Radiation',
+            'unit': 'W / m^2'
+        }
 
         return self._get_meteo_info(telescope, info_keywords,
                                     'Solar Radiation')
@@ -936,6 +981,7 @@ class TugMeteo(object):
         {
             'timestamp': '2019-05-31T23:18:41',
             'info': 'Air Density',
+            'unit': 'kg / m^3',
             'RTT150': None,
             'T100': 0.917,
             'T60': 0.918
@@ -945,6 +991,8 @@ class TugMeteo(object):
         info_keywords = {
             'RTT150': None,
             'T100': 'Air Density',
-            'T60': 'Air Density'}
+            'T60': 'Air Density',
+            'unit': 'kg / m^3'
+        }
 
         return self._get_meteo_info(telescope, info_keywords, 'Air Density')
