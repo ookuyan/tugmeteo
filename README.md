@@ -48,6 +48,7 @@ print(t)
 {
     "timestamp": "2019-05-30T18:52:12",
     "info": "Temperature",
+    "unit": "C",
     "RTT150": 16.7,
     "T100": 16.7,
     "T60": 17.3,
