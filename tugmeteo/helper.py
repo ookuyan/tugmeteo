@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 __all__ = ['get_current_time_stamp', 'parse_meteo_page',
-           'parse_meteo_archive', 'concat_meteo_archive']
+           'parse_meteo_archive', 'concat_meteo_archive',
+           'generate_meteo_archive_urls']
 
 from io import StringIO
 from datetime import datetime, timedelta

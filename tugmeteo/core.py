@@ -150,9 +150,9 @@ class TugMeteo(object):
         if telescope in self._telescopes:
             try:
                 respond = requests.get(
-                    self._telescopes_meteo_pages[telescope])
-            except requests.exceptions.RequestException as exp:
-                print(exp)
+                    self._telescopes_meteo_pages[telescope],
+                    timeout=5)
+            except requests.exceptions.RequestException:
                 return None
 
             return respond.text
@@ -185,7 +185,6 @@ class TugMeteo(object):
         info['timestamp'] = get_current_time_stamp()
         info['info'] = key
 
-        # test
         info['unit'] = info_keywords['unit']
 
         if self.get_last_meteo(telescope) is not None:
@@ -193,7 +192,10 @@ class TugMeteo(object):
                 for tel in self._telescopes:
                     keyword = info_keywords[tel]
                     if keyword is not None:
-                        info[tel] = self._last_meteos[tel][keyword]
+                        if self._last_meteos[tel] is not None:
+                            info[tel] = self._last_meteos[tel][keyword]
+                        else:
+                            info[tel] = None
                     else:
                         info[tel] = None
             else:
@@ -201,8 +203,6 @@ class TugMeteo(object):
                 if keyword is not None:
                     info['telescope'] = telescope
                     info['value'] = self._last_meteos[telescope][keyword]
-
-                    # info[telescope] = self._last_meteos[telescope][keyword]
                 else:
                     info[telescope] = None
 
@@ -282,22 +282,28 @@ class TugMeteo(object):
 
         raw_archives = list()
         for url in urls:
-            r = requests.get(url)
-            if not r.ok:
+            r = None
+            try:
+                r = requests.get(url, timeout=5)
+            except requests.exceptions.Timeout:
                 continue
 
-            raw_archives.append(r.text)
+            if r is not None:
+                raw_archives.append(r.text)
 
-        tables = list()
-        for raw_archive in raw_archives:
-            table = parse_meteo_archive(raw_archive)
-            tables.append(table)
+        if raw_archives:
+            tables = list()
+            for raw_archive in raw_archives:
+                table = parse_meteo_archive(raw_archive)
+                tables.append(table)
 
-        t = concat_meteo_archive(tables)
+            t = concat_meteo_archive(tables)
 
-        self._meteo_archives[telescope] = t
+            self._meteo_archives[telescope] = t
 
-        return t
+            return t
+
+        return None
 
     def get_last_meteo(self, telescope='all'):
         """
