@@ -1,7 +1,3 @@
-```python
-%matplotlib inline
-```
-
 # ***tugmeteo***
 
 ### TÜBİTAK National Observatory (TUG) Meteorology Library
@@ -332,7 +328,7 @@ ax.legend(handles=[press, temp], labels=['Pressure', 'Temperature'], loc='upper 
 
 
 
-    <matplotlib.legend.Legend at 0x111441f90>
+
 
 
 
