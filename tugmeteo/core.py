@@ -285,7 +285,9 @@ class TugMeteo(object):
             r = None
             try:
                 r = requests.get(url, timeout=5)
-            except requests.exceptions.Timeout:
+                if not r.ok:
+                    continue
+            except requests.exceptions.RequestException:
                 continue
 
             if r is not None:
