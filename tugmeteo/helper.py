@@ -152,17 +152,17 @@ def parse_meteo_archive(raw_archive):
     for key in t.columns[1:].values:
         t[key] = pd.to_numeric(t[key])
 
-    header = list()
-    for column in t.columns:
-        header.append(column.strip())
-
-    t.columns = header
-
     return t
 
 
 def concat_meteo_archive(tables):
     t = pd.concat(tables)
     t.index = np.arange(0, len(t))
+
+    header = list()
+    for column in t.columns:
+        header.append(column.strip())
+
+    t.columns = header
 
     return t
