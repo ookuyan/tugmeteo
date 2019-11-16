@@ -165,4 +165,13 @@ def concat_meteo_archive(tables):
 
     t.columns = header
 
-    return t
+    masks = list()
+    for column in t.columns[1:]:
+        masks.append(t[column] > -50)
+
+    m = masks[0]
+
+    for mask in masks[1:]:
+        m = m & mask
+
+    return t[m]
