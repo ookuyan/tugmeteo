@@ -152,6 +152,12 @@ def parse_meteo_archive(raw_archive):
     for key in t.columns[1:].values:
         t[key] = pd.to_numeric(t[key])
 
+    header = list()
+    for column in t.columns:
+        header.append(column.strip())
+
+    t.columns = header
+
     return t
 
 
