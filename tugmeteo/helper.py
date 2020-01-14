@@ -74,9 +74,12 @@ def parse_meteo_page(html, telescope):
             keyword = x[0].strip()
             value = x[-1].strip()
 
-            last_meteo[keyword] = float(value)
+            try:
+                last_meteo[keyword] = float(value)
+            except ValueError:
+                continue
 
-        for x in soup.findAll('b')[13:30][0::2]:
+        for x in soup.findAll('b')[15:32][0::2]:
             x = x.text.split('=')
 
             keyword = x[0].strip()
