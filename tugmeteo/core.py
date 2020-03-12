@@ -179,8 +179,10 @@ class TugMeteo(object):
 
         info['unit'] = info_keywords['unit']
 
+        telescope = telescope.upper()
+
         if self.get_last_meteo(telescope) is not None:
-            if telescope == 'all':
+            if telescope == 'ALL':
                 for tel in self._telescopes:
                     keyword = info_keywords[tel]
                     if keyword is not None:
@@ -255,6 +257,8 @@ class TugMeteo(object):
 
         if not isinstance(telescope, str):
             raise TypeError("'telescope' should be a 'str' object.")
+
+        telescope = telescope.upper()
 
         if telescope not in self._telescopes:
             raise ValueError(
@@ -347,7 +351,9 @@ class TugMeteo(object):
         }
         """
 
-        if telescope == 'all':
+        telescope = telescope.upper()
+
+        if telescope == 'ALL':
             self._telescope = telescope
 
             for telescope in self._telescopes:
