@@ -10,18 +10,12 @@ from .helper import get_current_time_stamp, parse_meteo_page,\
 
 class TugMeteo(object):
 
-    def __init__(self, telescope='all'):
+    def __init__(self):
         """
         TugMeteo
 
         TÜBİTAK National Observatory Meteorology Library
 
-        Parameters
-        ----------
-        telescope : str
-            Telescope name.
-            'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
-            Default value is 'all'.
 
         Methods
         -------
@@ -128,8 +122,6 @@ class TugMeteo(object):
         """
 
         super(TugMeteo, self).__init__()
-
-        self._telescope = telescope
 
         self._telescopes = ['RTT150', 'T100', 'T60']
 
