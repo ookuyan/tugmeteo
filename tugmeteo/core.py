@@ -1002,3 +1002,84 @@ class TugMeteo(object):
         }
 
         return self._get_meteo_info(telescope, info_keywords, 'Air Density')
+
+    def get_sensor_data(self, sensor, telescope='all'):
+        """
+        Return current meteorological data.
+
+        Parameters
+        ----------
+        sensor : str
+            Sensor name.
+
+        telescope : str
+            Telescope name.
+            'telescope' must be one of 'RTT150', 'T100', 'T60' or 'all'.
+            Default value is 'all'.
+
+        Returns
+        -------
+        type of 'dict'
+            Sensor data.
+
+        Examples
+        --------
+        >>> from tugmeteo import TugMeteo
+        >>>
+        >>> met = TugMeteo()
+        >>>
+        >>> t = met.get_sensor_data('air_density')
+        >>> print(t)
+        {
+            'timestamp': '2019-05-31T23:18:41',
+            'info': 'Air Density',
+            'unit': 'kg / m^3',
+            'RTT150': None,
+            'T100': 0.917,
+            'T60': 0.918
+        }
+        """
+
+        if sensor == 'temperature':
+            return self.get_temperature(telescope)
+
+        if sensor == 'dome_temperature':
+            return self.get_dome_temperature(telescope)
+
+        if sensor == 'humidity':
+            return self.get_humidity(telescope)
+
+        if sensor == 'dome_humidity':
+            return self.get_dome_humidity(telescope)
+
+        if sensor == 'pressure':
+            return self.get_pressure(telescope)
+
+        if sensor == 'wind_speed':
+            return self.get_wind_speed(telescope)
+
+        if sensor == 'wind_chill':
+            return self.get_wind_chill(telescope)
+
+        if sensor == 'wind_direction':
+            return self.get_wind_direction(telescope)
+
+        if sensor == 'dew_point':
+            return self.get_dew_point(telescope)
+
+        if sensor == 'cumulus_base':
+            return self.get_cumulus_base(telescope)
+
+        if sensor == 'rain':
+            return self.get_rain(telescope)
+
+        if sensor == 'uv_index':
+            return self.get_uv_index(telescope)
+
+        if sensor == 'solar_radiation':
+            return self.get_solar_radiation(telescope)
+
+        if sensor == 'air_density':
+            return self.get_air_density(telescope)
+
+        return {}
