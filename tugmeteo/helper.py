@@ -15,7 +15,7 @@ import pandas as pd
 
 def get_current_time_stamp():
     t = datetime.now()
-    return t.strftime('%Y-%m-%dT%H:%M%:%S')
+    return t.strftime('%Y-%m-%dT%H:%M:%S')
 
 
 def parse_meteo_page(html, telescope):
